@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PopMart URL Generator</title>
+</head>
+<body>
+  <h2>PopMart URL Generator</h2>
+  <p>Enter a URL like this:<br>
+  <code>https://www.popmart.com/ca/pop-now/set/293-10000210500879</code></p>
+  
+  <input type="text" id="inputUrl" style="width: 400px;" placeholder="Enter your PopMart URL here" />
+  <button onclick="generateUrls()">Generate Links</button>
+  
+  <div id="results" style="margin-top: 20px;"></div>
+  
+  <script>
+    function generateUrls() {
+      const input = document.getElementById('inputUrl').value.trim();
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+
+      // Basic validation
+      if (!input) {
+        resultsDiv.innerText = 'Please enter a valid URL.';
+        return;
+      }
+      
+      // Extract prefix and suffix using regex
+      // The URL structure: prefix + 4-digit number + suffix
+      // We'll assume the middle 4-digit number is right after '10000' in the URL
+      // So we want to split prefix at '10000' + 4 digits + suffix
+      
+      const regex = /^(.*10000)(\d{4})(.*)$/;
+      const match = input.match(regex);
+      
+      if (!match) {
+        resultsDiv.innerText = 'URL does not match expected pattern.';
+        return;
+      }
+      
+      const prefix = match[1]; // up to and including '10000'
+      const suffix = match[3]; // after the 4-digit number
+      const count = 1000; // how many links to generate
+
+      for (let i = 0; i < count; i++) {
+        // Generate a random 4-digit number as string
+        const randNum = Math.floor(Math.random() * 9000) + 1000; // 1000-9999
+        
+        const newUrl = prefix + randNum + suffix;
+        const link = document.createElement('a');
+        link.href = newUrl;
+        link.target = '_blank';
+        link.innerText = newUrl;
+        link.style.display = 'block';
+        link.style.marginBottom = '6px';
+        resultsDiv.appendChild(link);
+      }
+    }
+  </script>
+</body>
+</html>
+
